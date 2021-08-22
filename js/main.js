@@ -12,9 +12,10 @@ var snakeDirection = { x: 0, y: 0 };
 var snakePosition = [{
     x: ~~(gameFieldSize / 2),
     y: ~~(gameFieldSize / 2)
-}];
+}]; // place snake in the game field center
 var snakeLength = 2;
 
+// initialize snake-presence map of the game field
 var snakeMap = [];
 for (let i = 0; i < gameFieldSize; ++i) {
     snakeMap.push([]);
@@ -77,6 +78,7 @@ function moveSnake() {
 }
 
 function spawnFood() {
+    // find free from snake random position
     let x, y;
     do {
         x = Math.floor(Math.random() * gameFieldSize);
