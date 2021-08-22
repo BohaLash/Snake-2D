@@ -13,7 +13,7 @@ var snakeDirection = { x: 1, y: 0 }
 var snakePosition = [{ x: 1, y: 0 }, { x: 0, y: 0 }]
 var snakeLength = 2
 
-var foodMap = [...Array(gameFieldSize)].map(() => [])
+var foodPosition = { x: 0, y: 0 }
 var snakeMap = [...Array(gameFieldSize)].map(() => [])
 
 
@@ -63,28 +63,25 @@ function moveSnake() {
     snakeMap[head.x][head.y] = true
 
     // handle food
-    if (foodMap[head.x][head.y]) {
-        foodMap[head.x][head.y] = false;
+    if (foodPosition.x == head.x && foodPosition.y == head.y) {
         snakeLength++;
+        spawnFood();
     }
 }
 
 function spawnFood() {
-    if (Math.random() > 0.9 + 0.1 * snakeLength / gameFieldArea) {
-        let rand, x, y;
-        do {
-            rand = Math.floor(Math.random() * gameFieldArea);
-            x = ~~(rand / gameFieldSize);
-            y = rand % gameFieldSize;
-        } while (foodMap[x][y] || snakeMap[x][y])
-        foodMap[x][y] = true;
-        drawBlock({ x: x, y: y }, foodColor)
-    }
+    let rand, x, y;
+    do {
+        rand = Math.floor(Math.random() * gameFieldArea);
+        x = ~~(rand / gameFieldSize);
+        y = rand % gameFieldSize;
+    } while (snakeMap[x][y])
+    foodPosition = { x: x, y: y }
+    drawBlock(foodPosition, foodColor)
 }
 
 function animate() {
     moveSnake()
-    spawnFood()
 }
 
 function initGame() {
@@ -92,6 +89,8 @@ function initGame() {
     drawBlock(snakePosition[0], snakeColor);
 
     document.addEventListener('keydown', onKeyDown, false);
+
+    spawnFood()
 
     gameLoop = setInterval(animate, 1000 / speed);
 }
