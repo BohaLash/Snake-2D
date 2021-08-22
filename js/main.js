@@ -19,14 +19,6 @@ var snakeMap = [...Array(gameFieldSize)].map(() => [])
 
 var gameLoop;
 
-// ctx.fillStyle = 'rgb(200, 0, 0)';
-// ctx.fillRect(10, 10, 10 + blockSize, 10 + blockSize);
-
-// ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
-// ctx.fillRect(30, 30, 30 + blockSize, 30 + blockSize);
-
-// drawBlock(0, 0, 'rgb(200, 0, 0)');
-// drawBlock(20, 20, 'rgba(0, 0, 200, 0.5)');
 
 function drawBlock(p, color) {
     ctx.fillStyle = color;
@@ -44,28 +36,6 @@ function clearBlock(p) {
 function onBorders(p) {
     return p.x < 0 || p.y < 0 || p.x > gameFieldSize || p.y > gameFieldSize;
 }
-
-// function eatItSelf() {
-//     let p = snakePosition[0];
-//     for (let i = 1; i < snakePosition.length; ++i)
-//         if (snakePosition[i].x == p.x && snakePosition[i].y == p.y)
-//             return true
-//     return false
-// }
-
-// function handleFood(p) {
-//     if (foodMap[p.x][p.y]) {
-//         foodMap[p.x][p.y] = false;
-//         snakeLength++;
-//     }
-
-//     // for (let i = 0; i < foodPosition.length; ++i)
-//     //     if (snakePosition[0] == foodPosition[i]) {
-//     //         snakeLength++;
-//     //         foodPosition.splice(i, 1);
-//     //         return
-//     //     }
-// }
 
 function moveSnake() {
     // clear tail if needed
