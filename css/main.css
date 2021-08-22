@@ -1,0 +1,19 @@
+body {
+    margin: 0;
+    padding: 0;
+    /* box-sizing: border-box; */
+}
+
+#game {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: min(90vw, 90vh);
+    height: min(90vw, 90vh);
+
+    border: #333 solid;
+
+    background-color: #333;
+}
