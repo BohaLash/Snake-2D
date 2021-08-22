@@ -8,14 +8,18 @@ const speed = 5;
 const snakeColor = 'rgb(200, 0, 0)';
 const foodColor = 'rgba(0, 0, 200, 0.5)';
 
-var snakeDirection = { x: 1, y: 0 };
-var snakePosition = [{ x: 1, y: 0 }, { x: 0, y: 0 }];
+var snakeDirection = { x: 0, y: 0 };
+var snakePosition = [{
+    x: ~~(gameFieldSize / 2),
+    y: ~~(gameFieldSize / 2)
+}];
 var snakeLength = 2;
 
 var snakeMap = [];
 for (let i = 0; i < gameFieldSize; ++i) {
     snakeMap.push([]);
 }
+snakeMap[snakePosition[0].x][snakePosition[0].y] = true;
 
 var foodPosition = { x: 0, y: 0 };
 
@@ -59,6 +63,7 @@ function moveSnake() {
     if (onBorders(head) || snakeMap[head.x][head.y]) {
         clearInterval(gameLoop);
         alert('Game Over!');
+        return;
     }
 
     drawBlock(snakePosition[0], snakeColor);
@@ -82,12 +87,23 @@ function spawnFood() {
 }
 
 function initGame() {
+    // select random direction
+    let x = Math.floor(Math.random()), y = Math.floor(Math.random()) * 2 - 1;
+    snakeDirection.x = x * y;
+    snakeDirection.y = !x * y;
+
+    // create and draw snake
+    snakePosition.push({
+        x: snakePosition[0].x + snakeDirection.x * -1,
+        y: snakePosition[0].y + snakeDirection.y * -1
+    });
+    snakeMap[snakePosition[1].x][snakePosition[1].y] = true;
     drawBlock(snakePosition[1], snakeColor);
     drawBlock(snakePosition[0], snakeColor);
 
-    document.addEventListener('keydown', onKeyDown, false);
-
     spawnFood();
+
+    document.addEventListener('keydown', onKeyDown, false);
 
     gameLoop = setInterval(moveSnake, 1000 / speed);
 }
