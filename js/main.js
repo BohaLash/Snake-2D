@@ -2,19 +2,22 @@ var canvas = document.getElementById('game');
 var ctx = canvas.getContext('2d');
 
 const gameFieldSize = 10;
-const gameFieldArea = gameFieldSize * gameFieldSize;
 const blockSize = canvas.width / gameFieldSize;
 const speed = 5;
 
 const snakeColor = 'rgb(200, 0, 0)';
 const foodColor = 'rgba(0, 0, 200, 0.5)';
 
-var snakeDirection = { x: 1, y: 0 }
-var snakePosition = [{ x: 1, y: 0 }, { x: 0, y: 0 }]
-var snakeLength = 2
+var snakeDirection = { x: 1, y: 0 };
+var snakePosition = [{ x: 1, y: 0 }, { x: 0, y: 0 }];
+var snakeLength = 2;
 
-var foodPosition = { x: 0, y: 0 }
-var snakeMap = [...Array(gameFieldSize)].map(() => [])
+var snakeMap = [];
+for (let i = 0; i < gameFieldSize; ++i) {
+    snakeMap.push([]);
+}
+
+var foodPosition = { x: 0, y: 0 };
 
 
 var gameLoop;
@@ -33,34 +36,33 @@ function clearBlock(p) {
         blockSize, blockSize);
 }
 
-function onBorders(p) {
-    return p.x < 0 || p.y < 0 || p.x > gameFieldSize || p.y > gameFieldSize;
-}
+const onBorders = (p) =>
+    p.x < 0 || p.y < 0 || p.x > gameFieldSize || p.y > gameFieldSize;
 
 function moveSnake() {
     // clear tail if needed
     if (snakePosition.length == snakeLength) {
-        let tail = snakePosition[snakeLength - 1]
-        clearBlock(tail)
-        snakeMap[tail.x][tail.y] = false
-        snakePosition.pop()
+        let tail = snakePosition[snakeLength - 1];
+        clearBlock(tail);
+        snakeMap[tail.x][tail.y] = false;
+        snakePosition.pop();
     }
 
     // set new head
     snakePosition.unshift({
         x: snakePosition[0].x + snakeDirection.x,
         y: snakePosition[0].y + snakeDirection.y
-    })
-    let head = snakePosition[0]
+    });
+    let head = snakePosition[0];
 
     // handle colizions
     if (onBorders(head) || snakeMap[head.x][head.y]) {
-        clearInterval(gameLoop)
-        alert('Game Over!')
+        clearInterval(gameLoop);
+        alert('Game Over!');
     }
 
-    drawBlock(snakePosition[0], snakeColor)
-    snakeMap[head.x][head.y] = true
+    drawBlock(snakePosition[0], snakeColor);
+    snakeMap[head.x][head.y] = true;
 
     // handle food
     if (foodPosition.x == head.x && foodPosition.y == head.y) {
@@ -70,18 +72,13 @@ function moveSnake() {
 }
 
 function spawnFood() {
-    let rand, x, y;
+    let x, y;
     do {
-        rand = Math.floor(Math.random() * gameFieldArea);
-        x = ~~(rand / gameFieldSize);
-        y = rand % gameFieldSize;
+        x = Math.floor(Math.random() * gameFieldSize);
+        y = Math.floor(Math.random() * gameFieldSize);
     } while (snakeMap[x][y])
-    foodPosition = { x: x, y: y }
-    drawBlock(foodPosition, foodColor)
-}
-
-function animate() {
-    moveSnake()
+    foodPosition = { x: x, y: y };
+    drawBlock(foodPosition, foodColor);
 }
 
 function initGame() {
@@ -90,9 +87,9 @@ function initGame() {
 
     document.addEventListener('keydown', onKeyDown, false);
 
-    spawnFood()
+    spawnFood();
 
-    gameLoop = setInterval(animate, 1000 / speed);
+    gameLoop = setInterval(moveSnake, 1000 / speed);
 }
 
 function onKeyDown(event) {
@@ -101,16 +98,16 @@ function onKeyDown(event) {
             snakeDirection = {
                 x: !snakeDirection.x * snakeDirection.y,
                 y: !snakeDirection.y * snakeDirection.x * -1
-            }
+            };
             return;
 
         case 'ArrowRight':
             snakeDirection = {
                 x: !snakeDirection.x * snakeDirection.y * -1,
                 y: !snakeDirection.y * snakeDirection.x
-            }
+            };
             return;
     }
 }
 
-initGame()
+initGame();
